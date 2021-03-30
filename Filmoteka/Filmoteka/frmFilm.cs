@@ -10,15 +10,20 @@ namespace Filmoteka
 {
  public partial class frmFilm : Form
  {
+  public Film SelectedFilm { get; set; }
+  public bool IsDialog { get; set; }
+
   private List<Film> films;
   private SqlRepo sqlRepo;
   private int sortColumn;
   private bool desc;
+  
 
   public frmFilm()
   {
    InitializeComponent();
-   sqlRepo = new SqlRepo("Data Source=titanic.vassboskovice.cz;Initial Catalog=Hla-filmoteka;User ID=sa;Password=********;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+   
+   sqlRepo = new SqlRepo("Data Source=titanic.vassboskovice.cz;Initial Catalog=Hla-filmoteka;User ID=sa;Password=Agent007;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
    //sqlRepo.CreateFilms();
   }
 
@@ -66,6 +71,18 @@ namespace Filmoteka
     DataRefresh(sortColumn, desc);
    else
     DataRefresh(menuZanr.Items[menuZanr.SelectedIndex].ToString(), sortColumn, desc);
+  }
+
+  private void lvFilmy_DoubleClick(object sender, EventArgs e)
+  {
+   if (IsDialog)
+   {
+    if (lvFilmy.SelectedIndices.Count > 0)
+    {
+     SelectedFilm = films[lvFilmy.SelectedIndices[0]];
+     Close();
+    }
+   }   
   }
  }
 }

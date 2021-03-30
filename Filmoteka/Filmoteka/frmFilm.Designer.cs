@@ -67,6 +67,7 @@ namespace Filmoteka
             this.columnHeader4,
             this.columnHeader5});
    this.lvFilmy.Dock = System.Windows.Forms.DockStyle.Fill;
+   this.lvFilmy.FullRowSelect = true;
    this.lvFilmy.GridLines = true;
    this.lvFilmy.HideSelection = false;
    this.lvFilmy.Location = new System.Drawing.Point(0, 32);
@@ -77,6 +78,7 @@ namespace Filmoteka
    this.lvFilmy.UseCompatibleStateImageBehavior = false;
    this.lvFilmy.View = System.Windows.Forms.View.Details;
    this.lvFilmy.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvFilmy_ColumnClick);
+   this.lvFilmy.DoubleClick += new System.EventHandler(this.lvFilmy_DoubleClick);
    // 
    // columnHeader1
    // 

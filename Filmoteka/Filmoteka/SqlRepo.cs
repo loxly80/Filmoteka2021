@@ -147,5 +147,34 @@ namespace Filmoteka
     }
    }
   }
+
+  public void Delete(Customer customer)
+  {
+   using (SqlConnection connection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand command = new SqlCommand($"", connection))
+    {
+     connection.Open();
+     command.CommandText = $"delete from Customer where IdCustomer={customer.Id}";
+     command.ExecuteNonQuery();
+     connection.Close();
+    }
+   }
+  }
+
+  public void AddCredit(Customer customer,int credit)
+  {
+   using (SqlConnection connection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand command = new SqlCommand($"", connection))
+    {
+     connection.Open();
+     command.CommandText = $"update Customer set Credit = Credit + {credit} where IdCustomer={customer.Id}";
+     command.ExecuteNonQuery();
+     connection.Close();
+    }
+   }
+  }
+
  }
 }

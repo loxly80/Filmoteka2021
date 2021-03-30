@@ -20,6 +20,7 @@ namespace Filmoteka
   private void btnFilmy_Click(object sender, EventArgs e)
   {
    frmFilm frmFilm = new frmFilm();
+   frmFilm.IsDialog = false;
    frmFilm.ShowDialog();
   }
 

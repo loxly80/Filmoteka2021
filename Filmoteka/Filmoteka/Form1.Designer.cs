@@ -57,6 +57,7 @@ namespace Filmoteka
    // 
    // btnVypujcky
    // 
+   this.btnVypujcky.Enabled = false;
    this.btnVypujcky.Location = new System.Drawing.Point(12, 82);
    this.btnVypujcky.Name = "btnVypujcky";
    this.btnVypujcky.Size = new System.Drawing.Size(243, 29);
