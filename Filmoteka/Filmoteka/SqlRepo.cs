@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Filmoteka
 {
@@ -162,7 +163,7 @@ namespace Filmoteka
    }
   }
 
-  public void AddCredit(Customer customer,int credit)
+  public void AddCredit(Customer customer, int credit)
   {
    using (SqlConnection connection = new SqlConnection(ConnectionString))
    {
@@ -176,5 +177,79 @@ namespace Filmoteka
    }
   }
 
+  public void CreateLease(Customer customer, Film film, int length)
+  {
+   using (SqlConnection connection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand command = new SqlCommand($"", connection))
+    {
+     connection.Open();
+     command.CommandText = $"insert into Lease(IdCustomer,IdFilm,StartTime,ActivationLength) values({customer.Id},{film.Id},getdate(),{length})";
+     command.ExecuteNonQuery();
+     connection.Close();
+    }
+   }
+  }
+
+  public List<ListViewItem> GetLeases(Customer customer)
+  {
+   List<ListViewItem> result = new List<ListViewItem>();
+   using (SqlConnection connection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand command = new SqlCommand($"select Film.Name, Lease.StartTime, Lease.ActivationLength from Lease join Film on Lease.IdFilm=Film.IdFilm where Lease.IdCustomer={customer.Id} and DATEADD(hour,Lease.ActivationLength,Lease.StartTime)>getdate()", connection))
+    {
+     connection.Open();
+     using (SqlDataReader dataReader = command.ExecuteReader())
+     {
+      while (dataReader.Read())
+      {
+       result.Add(new ListViewItem(new string[] {
+          dataReader["Name"].ToString()
+        , Convert.ToDateTime(dataReader["StartTime"]).ToString("dd.MM.yyyy - HH:mm")
+        , dataReader["ActivationLength"].ToString()}));
+      }
+     }
+     connection.Close();
+    }
+   }
+   return result;
+  }
+
+  public double AverageLeaseLength()
+  {
+   double result = 0;
+   using (SqlConnection connection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand command = new SqlCommand($"select AVG(ActivationLength) from Lease", connection))
+    {
+     connection.Open();
+     result = Convert.ToDouble(command.ExecuteScalar());
+     connection.Close();
+    }
+   }
+   return result;
+  }
+
+  public string Top3Films()
+  {
+   List<string> result = new List<string>();
+   using (SqlConnection connection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand command = new SqlCommand($"select top 3 Lease.IdFilm,Film.Name, Pocet=COUNT(*) from Lease join Film on Lease.IdFilm=Film.IdFilm group by Lease.IdFilm, Film.Name order by Pocet desc", connection))
+    {
+     connection.Open();
+     using (SqlDataReader dataReader = command.ExecuteReader())
+     {
+      while (dataReader.Read())
+      {
+       result.Add(dataReader["Name"].ToString());
+      }
+     }
+     connection.Close();
+    }
+   }
+   return string.Join(", ", result);
+  }
  }
+
 }
